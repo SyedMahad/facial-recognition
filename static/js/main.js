@@ -1,3 +1,63 @@
+// Real-time input validation for name
+const nameInput = document.getElementById("name");
+if (nameInput) {
+    nameInput.addEventListener("focusout", function() {
+        if (this.value.trim() === "") {
+            displayMessage("Name cannot be empty.", "error");
+        } else {
+            displayMessage("", "");
+        }
+    });
+}
+
+// Real-time input validation for image upload
+const fileInput = document.getElementById("file");
+if (fileInput) {
+    fileInput.addEventListener("cancel", function() {
+        if (this.files.length === 0) {
+            displayMessage("Please upload an image.", "error");
+        } else {
+            displayMessage("", "");
+        }
+    });
+}
+
+// Real-time input validation for image upload
+const fileSignInInput = document.getElementById("signin-file");
+if (fileSignInInput) {
+    fileSignInInput.addEventListener("cancel", function() {
+        if (this.files.length === 0) {
+            displayMessage("Please upload an image.", "error");
+        } else {
+            displayMessage("", "");
+        }
+    });
+}
+
+function showToast(message, type) {
+    const toast = document.createElement("div");
+    toast.className = `toast ${type}`;
+    toast.textContent = message;
+    document.body.appendChild(toast);
+
+    setTimeout(() => {
+        toast.classList.add("show");
+    }, 100);
+
+    setTimeout(() => {
+        toast.classList.remove("show");
+        toast.remove();
+    }, 3000);
+}
+
+// Highlight active link
+const navLinks = document.querySelectorAll(".nav-item");
+navLinks.forEach(link => {
+    if (window.location.pathname === link.getAttribute("href")) {
+        link.classList.add("active-nav");
+    }
+});
+
 /**
  * Set the loading state for buttons during form submission.
  * @param {HTMLElement} button - The button element.
@@ -15,17 +75,6 @@ function setLoadingState(button, isLoading) {
 }
 
 /**
- * Display a message on the UI.
- * @param {string} message - The message text.
- * @param {string} type - 'success' or 'error'.
- */
-function displayMessage(message, type) {
-    const messageBox = document.getElementById("message-box");
-    messageBox.innerText = message;
-    messageBox.className = `message ${type}`;
-}
-
-/**
  * Handle user registration.
  */
 async function registerUser() {
@@ -36,7 +85,7 @@ async function registerUser() {
     const signInBtn = document.getElementById("sign-in-btn");
 
     if (!nameInput || !fileInput) {
-        displayMessage("Please enter your name and select an image.", "error");
+        showToast("Please enter your name and select an image.", "error");
         return;
     }
 
@@ -48,11 +97,11 @@ async function registerUser() {
     try {
         const response = await fetch("/register-user/", { method: "POST", body: formData });
         const data = await response.json();
-        displayMessage(response.ok ? data.message : data.detail || "Registration failed.", response.ok ? "success" : "error");
+        showToast(response.ok ? data.message : data.detail || "Registration failed.", response.ok ? "success" : "error");
         registerBtn.style.display = "none";
-        signInBtn.style.display = "block";
+        signInBtn.style.display = "flex";
     } catch {
-        displayMessage("An error occurred during registration.", "error");
+        showToast("An error occurred during registration.", "error");
     } finally {
         setLoadingState(registerBtn, false);
     }
@@ -67,7 +116,7 @@ async function signInUser() {
     const signInBtn = document.getElementById("signin-btn");
 
     if (!fileInput) {
-        displayMessage("Please upload an image for sign-in.", "error");
+        showToast("Please upload an image for sign-in.", "error");
         return;
     }
 
@@ -77,9 +126,9 @@ async function signInUser() {
     try {
         const response = await fetch("/sign-in-user/", { method: "POST", body: formData });
         const data = await response.json();
-        displayMessage(response.ok ? data.message : data.detail || "Sign-in failed.", response.ok ? "success" : "error");
+        showToast(response.ok ? data.message : data.detail || "Sign-in failed.", response.ok ? "success" : "error");
     } catch {
-        displayMessage("An error occurred during sign-in.", "error");
+        showToast("An error occurred during sign-in.", "error");
     } finally {
         setLoadingState(signInBtn, false);
     }

@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ title }}</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+
+    {# Show navigation bar only if `show_nav` is True #}
+    {% if show_nav %}
+    <nav>
+        <ul class="nav-links">
+            <li><a href="/" class="{% if request.url.path == '/' %}active-nav{% endif %}">Home</a></li>
+            <li><a href="/register/" class="{% if request.url.path == '/register/' %}active-nav{% endif %}">Register</a></li>
+            <li><a href="/sign-in/" class="{% if request.url.path == '/sign-in/' %}active-nav{% endif %}">Sign-In</a></li>
+        </ul>
+    </nav>
+    {% endif %}
+
+    <div class="main-content">
+        {% block content %}{% endblock %}
+    </div>
+
+    <script src="/static/js/main.js"></script>
+</body>
+</html>

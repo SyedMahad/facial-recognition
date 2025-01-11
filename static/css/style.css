@@ -10,11 +10,60 @@ body {
     height: 100vh;
 }
 
+/* Navigation Bar */
+nav {
+    background-color: #fff;
+    width: 100%;
+    padding: 15px 30px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1000;
+}
+
+.nav-links {
+    display: flex;
+    justify-content: center;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.nav-links li {
+    margin: 0 15px;
+}
+
+.nav-links a {
+    text-decoration: none;
+    color: #333;
+    font-weight: 600;
+    font-size: 16px;
+    padding: 8px 16px;
+    border-radius: 5px;
+    transition: background-color 0.3s;
+}
+
+.nav-links a:hover {
+    background-color: #6B73FF;
+    color: #fff;
+}
+
+.nav-links a.active-nav {
+    background-color: #000DFF;
+    color: #fff;
+}
+
+
 /* Layout */
-.main-wrapper {
+.main-wrapper, .main-wrapper-home {
     display: flex;
     align-items: center;
     gap: 30px;
+}
+
+.main-wrapper-home {
+    flex-direction: column;
 }
 
 /* Vertical Divider */
@@ -35,12 +84,85 @@ body {
     text-align: center;
 }
 
-/* Typography */
+/* Header Styling */
+header {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
 header h1 {
+    font-size: 36px;
     color: #fff;
+    margin-bottom: 10px;
+}
+
+header p {
+    font-size: 18px;
+    color: #e0e0e0;
+}
+
+/* Actions Wrapper */
+.actions-wrapper {
+    display: flex;
+    justify-content: center;
+    gap: 40px;
+    margin-top: 20px;
+}
+
+/* Action Cards */
+.action-card {
+    background-color: #fff;
+    padding: 30px 20px;
+    width: 280px;
+    border-radius: 12px;
+    text-align: center;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+}
+
+.action-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+}
+
+/* Action Card Icons */
+.action-icon {
+    width: 80px;
+    height: 80px;
+    margin-bottom: 15px;
+}
+
+/* Action Card Headings */
+.action-card h3 {
+    font-size: 22px;
+    color: #333;
+    margin-bottom: 10px;
+}
+
+/* Action Card Text */
+.action-card p {
+    font-size: 14px;
+    color: #555;
     margin-bottom: 20px;
 }
 
+/* Action Card Buttons */
+.action-card button {
+    background-color: #6B73FF;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s ease;
+}
+
+.action-card button:hover {
+    background-color: #000DFF;
+}
+
+/* Typography */
 h2 {
     color: #333;
     margin-bottom: 20px;
@@ -106,8 +228,33 @@ button:disabled {
     color: white;
 }
 
-.sign-in {
+/* Sign-In Button Styling */
+#sign-in-btn {
     display: none;
+    align-items: center;  /* Vertically centers icon and text */
+    justify-content: center;
+    gap: 8px;  /* Space between icon and text */
+    background-color: #6B73FF;
+    color: white;
+    border: none;
+    padding: 12px;
+    font-size: 16px;
+    cursor: pointer;
+    border-radius: 8px;
+    transition: background-color 0.3s ease;
+    margin-top: 10px;
+}
+
+/* Sign-In Button Hover Effect */
+#sign-in-btn:hover {
+    background-color: #000DFF;
+}
+
+/* Right-Arrow Icon Styling */
+.signin-icon {
+    width: 18px;    /* Adjust size as needed */
+    height: 18px;
+    object-fit: contain;
 }
 
 /* Spinner Loader */
@@ -126,3 +273,60 @@ button:disabled {
     0% { transform: rotate(0deg); }
     100% { transform: rotate(360deg); }
 }
+
+/* Toast Notification Styles */
+.toast {
+    visibility: hidden;
+    min-width: 300px;
+    padding: 16px;
+    border-radius: 8px;
+    text-align: center;
+    font-weight: 600;
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 9999;
+    opacity: 0;
+    transition: opacity 0.5s ease-in-out, top 0.5s ease-in-out;
+}
+
+.toast.show {
+    visibility: visible;
+    opacity: 1;
+    top: 100px;
+}
+
+/* Success and Error Colors */
+.toast.success {
+    background-color: #4CAF50;
+    color: white;
+}
+
+.toast.error {
+    background-color: #f44336;
+    color: white;
+}
+
+/* Mobile Responsive */
+@media (max-width: 600px) {
+    .main-wrapper {
+        flex-direction: column;
+        gap: 20px;
+    }
+
+    .container {
+        width: 90%;
+        padding: 20px;
+    }
+
+    input[type="text"], input[type="file"] {
+        width: 90%;
+    }
+
+    .vertical-line {
+        display: none;
+    }
+}
+
+

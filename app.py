@@ -14,6 +14,48 @@ templates = Jinja2Templates(directory="templates")
 # Serve static files (CSS and JS)
 app.mount("/static", StaticFiles(directory="static"), name="static")
 
+@app.get("/", response_class=HTMLResponse)
+async def serve_index(request: Request):
+    """
+    Serve the index page.
+    
+    Args:
+        request (Request): HTTP request object.
+
+    Returns:
+        HTMLResponse: Rendered index.html template.
+    """
+    # return templates.TemplateResponse("index.html", {"request": request})
+    return templates.TemplateResponse("index.html", {"request": request, "title": "Home", "show_nav": False})
+
+@app.get("/register/", response_class=HTMLResponse)
+async def serve_register(request: Request):
+    """
+    Serve the user registration page.
+    
+    Args:
+        request (Request): HTTP request object.
+
+    Returns:
+        HTMLResponse: Rendered register.html template.
+    """
+    # return templates.TemplateResponse("register.html", {"request": request})
+    return templates.TemplateResponse("register.html", {"request": request, "title": "Register", "show_nav": True})
+
+@app.get("/sign-in/", response_class=HTMLResponse)
+async def serve_sign_in(request: Request):
+    """
+    Serve the sign-in page.
+    
+    Args:
+        request (Request): HTTP request object.
+
+    Returns:
+        HTMLResponse: Rendered sign-in.html template.
+    """
+    # return templates.TemplateResponse("sign-in.html", {"request": request})
+    return templates.TemplateResponse("sign-in.html", {"request": request, "title": "Sign-In", "show_nav": True})
+
 @app.post("/register-user/")
 async def register_user(name: str = Form(...), file: UploadFile = File(...)):
     """
@@ -89,42 +131,3 @@ async def sign_in(file: UploadFile = File(...)):
     except Exception as e:
         print(e)
         raise HTTPException(status_code=401, detail="Face not recognized")
-
-@app.get("/", response_class=HTMLResponse)
-async def serve_index(request: Request):
-    """
-    Serve the index page.
-    
-    Args:
-        request (Request): HTTP request object.
-
-    Returns:
-        HTMLResponse: Rendered index.html template.
-    """
-    return templates.TemplateResponse("index.html", {"request": request})
-
-@app.get("/register/", response_class=HTMLResponse)
-async def serve_register(request: Request):
-    """
-    Serve the user registration page.
-    
-    Args:
-        request (Request): HTTP request object.
-
-    Returns:
-        HTMLResponse: Rendered register.html template.
-    """
-    return templates.TemplateResponse("register.html", {"request": request})
-
-@app.get("/sign-in/", response_class=HTMLResponse)
-async def serve_sign_in(request: Request):
-    """
-    Serve the sign-in page.
-    
-    Args:
-        request (Request): HTTP request object.
-
-    Returns:
-        HTMLResponse: Rendered sign-in.html template.
-    """
-    return templates.TemplateResponse("sign-in.html", {"request": request})

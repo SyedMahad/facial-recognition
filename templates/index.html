@@ -1,29 +1,27 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Facial Recognition Sign-In</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="/static/css/style.css">
-</head>
-<body>
-    <div class="main-wrapper">
+{% extends "base.html" %}
+{% block content %}
+    <div class="main-wrapper-home">
         <header>
             <h1>Facial Recognition App</h1>
+            <p>Seamlessly register and sign in using facial recognition technology.</p>
         </header>
 
-        <div class="vertical-line"></div>
+        <div class="actions-wrapper">
+            <!-- Registration Card -->
+            <div class="action-card">
+                <img src="/static/images/register.png" alt="Register Icon" class="action-icon">
+                <h3>New Here?</h3>
+                <p>Create your profile and get started with secure facial recognition.</p>
+                <a href="/register/"><button>Register Now</button></a>
+            </div>
 
-        <div class="container">
-            <h2>Register User</h2>
-            <a href="/register/"><button> Register </button></a>
-
-            <h2>Sign-In</h2>
-            <a href="/sign-in/"><button> Sign-In </button></a>
+            <!-- Sign-In Card -->
+            <div class="action-card">
+                <img src="/static/images/signin.png" alt="Sign-In Icon" class="action-icon">
+                <h3>Welcome Back!</h3>
+                <p>Sign in instantly using your face—no password needed.</p>
+                <a href="/sign-in/"><button>Sign In</button></a>
+            </div>
         </div>
     </div>
-
-    <script src="/static/js/main.js"></script>
-</body>
-</html>
+{% endblock %}
