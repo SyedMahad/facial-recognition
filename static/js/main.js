@@ -7,7 +7,7 @@ function setLoadingState(button, isLoading) {
     if (isLoading) {
         button.disabled = true;
         button.setAttribute('data-original-text', button.innerText);
-        button.innerText = 'Loading...';
+        button.innerHTML = 'Loading <span class="loader"></span>';
     } else {
         button.disabled = false;
         button.innerText = button.getAttribute('data-original-text');
