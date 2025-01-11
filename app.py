@@ -1,144 +1,130 @@
 from fastapi import FastAPI, UploadFile, File, Form, HTTPException, Request
 from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
-
+from fastapi.staticfiles import StaticFiles
 import face_recognition
-
 from models import UserModel, user_db
 
-
+# Initialize FastAPI app
 app = FastAPI()
 
-# Set up Jinja2 for HTML templates
+# Set up Jinja2 for rendering HTML templates
 templates = Jinja2Templates(directory="templates")
 
+# Serve static files (CSS and JS)
+app.mount("/static", StaticFiles(directory="static"), name="static")
 
 @app.post("/register-user/")
 async def register_user(name: str = Form(...), file: UploadFile = File(...)):
     """
-    Register a new user by providing a name and an image file for facial recognition.
-
+    Register a new user by uploading an image for facial recognition.
+    
     Args:
-        name (str): The name of the user to be registered.
-        file (UploadFile): The image file containing the user's face.
+        name (str): Name of the user to register.
+        file (UploadFile): Uploaded image file containing the user's face.
 
     Returns:
-        dict: A success message if registration is successful, or an error if not.
+        dict: Success message if registration is successful.
 
     Raises:
-        HTTPException: If no face is found or other errors occur during processing.
+        HTTPException: If no face is detected or an error occurs during processing.
     """
     try:
-        # Load the image file and extract face encodings
+        # Load and encode the uploaded image
         image = face_recognition.load_image_file(file.file)
         face_encodings = face_recognition.face_encodings(image)
 
-        # If no face is found, raise an error
-        if len(face_encodings) == 0:
+        if not face_encodings:
             raise HTTPException(status_code=400, detail="No face found in the image")
 
-        # Create a new UserModel and store the face encoding
+        # Store user data
         new_user = UserModel(name=name, face_encoding=face_encodings[0].tolist())
-        new_user.set_facial_encoding(face_encodings[0].tolist())  # Convert numpy array to list for JSON serialization
-        user_db.append(new_user)  # Append the new user to the in-memory database
+        new_user.set_facial_encoding(face_encodings[0].tolist())
+        user_db.append(new_user)
 
         return {"message": f"User {name} registered successfully!"}
 
     except Exception as e:
-        # Catch and raise an error with appropriate details if something goes wrong
         print(e)
         raise HTTPException(status_code=500, detail=str(e))
 
-
-# Sign-in endpoint using facial recognition
 @app.post("/sign-in-user/")
 async def sign_in(file: UploadFile = File(...)):
     """
-    Sign in a user by comparing the provided image file with the stored facial encodings.
-
+    Authenticate a user using facial recognition.
+    
     Args:
-        file (UploadFile): The image file containing the user's face.
+        file (UploadFile): Uploaded image file for authentication.
 
     Returns:
-        dict: A success message with the user's name if authentication is successful, or an error if not.
+        dict: Success message if user is authenticated.
 
     Raises:
-        HTTPException: If no image is provided, no face is detected, or no matching face is found.
+        HTTPException: If authentication fails.
     """
     try:
-        # Ensure that an image file has been uploaded
         if not file.file:
             raise HTTPException(status_code=401, detail="No image provided")
 
-        # Load the image and extract face encodings
+        # Load and encode the uploaded image
         image = face_recognition.load_image_file(file.file)
         face_encodings = face_recognition.face_encodings(image)
 
-        # If no face is found, raise an error
-        if len(face_encodings) == 0:
+        if not face_encodings:
             raise HTTPException(status_code=401, detail="No face detected")
 
-        # Use the first face encoding in the image
         target_encoding = face_encodings[0]
 
-        # Compare the target face encoding with all stored face encodings in the database
+        # Compare uploaded face with stored user faces
         for user in user_db:
             stored_encoding = user.get_facial_encoding()
 
             if stored_encoding is not None:
-                # Compare the stored encoding with the target encoding
-                match_result = face_recognition.compare_faces([stored_encoding], target_encoding)
-
-                if match_result[0]:  # If a match is found
+                match = face_recognition.compare_faces([stored_encoding], target_encoding)
+                if match[0]:
                     return {"message": f"Welcome {user.name}!"}
 
-        # Raise an error if no match is found
         raise HTTPException(status_code=401, detail="No matching face found")
 
     except Exception as e:
         print(e)
-        # Catch and raise an error with appropriate details if something goes wrong
         raise HTTPException(status_code=401, detail="Face not recognized")
 
-
-# Root route to serve the index.html template
 @app.get("/", response_class=HTMLResponse)
-async def read_root(request: Request):
+async def serve_index(request: Request):
     """
-    Serve the root HTML page (index.html) for the application.
-
+    Serve the index page.
+    
     Args:
-        request (Request): The HTTP request object.
+        request (Request): HTTP request object.
 
     Returns:
-        HTMLResponse: The rendered index.html template.
+        HTMLResponse: Rendered index.html template.
     """
     return templates.TemplateResponse("index.html", {"request": request})
 
-
 @app.get("/register/", response_class=HTMLResponse)
-async def read_root(request: Request):
+async def serve_register(request: Request):
     """
-    Serve the root HTML page (index.html) for the application.
-
+    Serve the user registration page.
+    
     Args:
-        request (Request): The HTTP request object.
+        request (Request): HTTP request object.
 
     Returns:
-        HTMLResponse: The rendered index.html template.
+        HTMLResponse: Rendered register.html template.
     """
     return templates.TemplateResponse("register.html", {"request": request})
 
-
 @app.get("/sign-in/", response_class=HTMLResponse)
-async def read_root(request: Request):
+async def serve_sign_in(request: Request):
     """
-    Serve the root HTML page (index.html) for the application.
-
+    Serve the sign-in page.
+    
     Args:
-        request (Request): The HTTP request object.
+        request (Request): HTTP request object.
 
     Returns:
-        HTMLResponse: The rendered index.html template.
+        HTMLResponse: Rendered sign-in.html template.
     """
     return templates.TemplateResponse("sign-in.html", {"request": request})
