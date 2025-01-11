@@ -1,145 +1,166 @@
-# Facial Recognition Authentication System
+# Facial Recognition Web App
 
-This project is a facial recognition-based authentication system built using FastAPI and the `face_recognition` library. It allows users to register their face using an image and then sign in using facial recognition. This project serves as a **Proof of Concept (POC)** to demonstrate the basic functionality of facial recognition for authentication purposes. User data is stored in an in-memory database (for demo purposes), but this can be extended to a real database in production environments.
+A fast and user-friendly facial recognition web application built with **FastAPI**. This app allows users to register and sign in using facial recognition technology, ensuring a seamless and secure authentication process.
 
+---
 
-## Features
+## 🚀 Features
 
-- **Register**: Users can register by uploading an image containing their face and providing a name.
-- **Sign-In**: Users can sign in by uploading an image. The system checks if the face matches any registered users.
-- **Facial Recognition**: Powered by `dlib` through the `face_recognition` Python library, which provides high-accuracy face detection and encoding comparison.
-- **In-Memory Database**: For simplicity, the project stores user face encodings in an in-memory list (`user_db`). In production, this should be replaced with a persistent database.
-- **HTML Templating**: The app serves a basic HTML page for user interaction, created with Jinja2 templates.
+- **User Registration**: Upload your photo and register with your name.
+- **Facial Authentication**: Sign in using facial recognition without passwords.
+- **Modern UI/UX**: Sleek, responsive, and interactive user interface.
+- **Real-time Feedback**: Instant form validation and toast notifications.
+- **Lightweight & Fast**: Built with FastAPI for high performance.
 
-## Project Structure
+---
+
+## 🛠️ Tech Stack
+
+- **Backend**: FastAPI, Python
+- **Frontend**: HTML5, CSS3, JavaScript
+- **Facial Recognition**: face_recognition library (built on dlib)
+
+---
+
+## 📂 Project Structure
 
 ```
-facial-recognition-app/ 
-│ 
-├── app.py # Main FastAPI application logic
-├── models.py # UserModel class and in-memory database
+facial-recognition/
+├── static/
+│   ├── css/
+│   │   └── style.css
+│   ├── images/
+│   │   ├── register.png
+│   │   ├── right-arrow.png
+│   │   └── signin.png
+│   └── js/
+│       └── main.js
 ├── templates/
-│   └── index.html # Basic HTML form for user registration and sign-in
-└── README.md # Project documentation
+│   ├── base.html
+│   ├── index.html
+│   ├── register.html
+│   └── sign-in.html
+├── apps.py
+├── models.py
+├── README.md
+└── requirements.txt
 ```
 
-## Installation
+---
 
-### Prerequisites
+## ⚙️ Installation
 
-- **Python 3.7+**
-- **pip** (Python package manager)
-- **virtualenv** (optional, but recommended for isolating dependencies)
+1. **Clone the repository**
 
-### Steps
+```bash
+git clone git@github.com-personal:SyedMahad/facial-recognition.git
+cd facial-recognition
+```
 
-1. Clone the repository:
+2. **Create a virtual environment**
 
-   ```bash
-   git clone git@github.com:Diya-Interactive/facial-recognition.git
-   cd facial-recognition-app
+```bash
+python -m venv venv
+source venv/bin/activate  # On Windows: venv\Scripts\activate
+```
 
-1. Set up a virtual environment (optional, but recommended):
-    ```bash
-    python3 -m venv venv
-    source venv/bin/activate   # For Linux/MacOS
-    venv\Scripts\activate      # For Windows
-    ```
+3. **Install dependencies**
 
-1. Install the dependencies:
-    ```bash
-    pip install -r requirements.txt
-    ```
-    The key dependencies are:
+```bash
+pip install -r requirements.txt
+```
 
-    - `fastapi`
-    - `uvicorn`
-    - `face_recognition`
-    - `jinja2`
+4. **Run the app**
 
-1. Run the application:
-    ```bash
-    uvicorn app:app --reload
-    ```
-1. Visit the application in your browser at http://127.0.0.1:8000/.
+```bash
+uvicorn apps:app --reload
+```
 
-## API Endpoints
+5. **Access the app**
 
-### 1. Register User
+Open your browser and go to: [http://127.0.0.1:8000](http://127.0.0.1:8000)
 
-- **Endpoint:** /register/
-- **Method:** POST
-- **Description:** Registers a new user by uploading an image and providing a name. The user's facial encoding is extracted and stored.
+---
 
-#### Form Data:
+## 📸 Screenshots
 
-- **name:** Name of the user (string)
-- **file:** Image file containing the user's face (image/*)
+### 🔹 **Home Page**
 
-#### Response:
+- Provides easy navigation for registration and sign-in.
+![Home Page](static/images/home-page.png)
 
-- **200 OK:** Returns a success message if the user is registered successfully.
-- **400 Bad Request:** If no face is found in the image.
-- **500 Internal Server Error:** For any server-side errors.
+### 🔹 **Register Page**
 
-### 2. Sign In
+- Upload your image and register your name securely.
+![Register Page](static/images/register-page.png)
 
-- **Endpoint:** /sign-in/
-- **Method:** POST
-- **Description:** Authenticates a user by comparing the uploaded image with stored facial encodings.
+### 🔹 **Sign-In Page**
 
-#### Form Data:
+- Sign in with your registered face in seconds.
+![Sign-In Page](static/images/signin-page.png)
 
-- **file:** Image file containing the user's face (image/*)
+---
 
-#### Response:
+## 📝 API Endpoints
 
-- **200 OK:** Returns a success message with the user’s name if a match is found.
-- **401 Unauthorized:** If no match is found or no face is detected in the image.
+### 1. **Register User**
 
+- **Endpoint**: `/register-user/`
+- **Method**: `POST`
+- **Payload**:
+  - `name`: User's name (string)
+  - `file`: Image file (jpg, png)
 
-### 3. Home Page
+### 2. **Sign-In User**
 
-- **Endpoint:** /
-- **Method:** GET
-- **Description:** Serves the root HTML page (index.html), where users can register and sign in through forms.
+- **Endpoint**: `/sign-in-user/`
+- **Method**: `POST`
+- **Payload**:
+  - `file`: Image file (jpg, png)
 
-## Current Issue
+---
 
-The following test case outlines a potential issue with facial recognition when attempting to use an image of an image.
+## 🏗️ Future Improvements
 
-### Test Steps:
+- Integrate a database for persistent user storage.
+- Implement email verification.
+- Add multi-factor authentication.
+- Optimize image processing for faster recognition.
 
-1. **Step #01:** Take a selfie from your phone and use that image to register in the system.
-1. **Step #02:** Take a picture of this selfie from another phone (i.e., a photo of the registered selfie) and try to use that image for signing in.
+---
 
-### Expected Outcome:
+## 🤝 Contributing
 
-- The system should reject the attempt to sign in because the new image (a photo of the selfie) should not perfectly match the original encoding.
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/new-feature`)
+3. Commit your changes (`git commit -m 'Add new feature'`)
+4. Push to the branch (`git push origin feature/new-feature`)
+5. Open a Pull Request
 
-### Current Outcome:
+---
 
-- The system accepts the sign-in attempt, allowing users to sign in with a picture of the registered selfie.
+## 📜 License
 
-## Code Overview
+This project is licensed under the **MIT License**.
 
-### `models.py`
+---
 
-- **UserModel:** Represents a user, including their name and facial encoding. The encoding is stored as binary data for efficient storage and retrieval.
-- **user_db:** An in-memory list that acts as the database for registered users.
+## 🙌 Acknowledgments
 
-### app.py
+- [FastAPI](https://fastapi.tiangolo.com/)
+- [face_recognition](https://github.com/ageitgey/face_recognition)
+- [dlib](http://dlib.net/)
+- [Next icons created by Roundicons - Flaticon](https://www.flaticon.com/free-icons/next)
 
-- `/register/`: Registers a new user by extracting their facial encoding from the uploaded image and storing it.
-- `/sign-in/`: Authenticates a user by comparing the uploaded face image with the registered face encodings.
-- `/`: Serves the root HTML page for the application.
+---
 
-### index.html
+## 📬 Contact
 
-A simple HTML page with forms for user registration and sign-in. The forms accept an image file and (for registration) the user’s name.
+**Syed Mahad Ehsan**  
+🔗 [mahadehsan.com](https://mahadehsan.com)  
+💻 [GitHub](https://github.com/SyedMahad)
 
-## Notes
+---
 
-- This is a demo application that stores user data in memory. For production use, integrate a persistent database (e.g., PostgreSQL, SQLite).
-- Ensure that the application runs in a secure environment when deployed to production, as it deals with personal biometric data (faces).
+**Secure. Fast. Facial Authentication.** 🔐
 
